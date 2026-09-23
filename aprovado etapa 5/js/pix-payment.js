@@ -213,7 +213,7 @@ function showPixPayment(paymentData, userData = null) {
             height: 256,
             colorDark: '#000000',
             colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
+            correctLevel: QRCode.CorrectLevel.L
         });
         console.log('QR Code gerado com sucesso');
     } catch (error) {
