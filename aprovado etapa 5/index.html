@@ -568,7 +568,7 @@
                 /* Espaçamento entre o loader e o texto */
             }
         }
-        
+        @keyframes is-rotating {
             to {
                 transform: rotate(1turn);
             }
@@ -813,6 +813,30 @@
                             <!-- O CPF será injetado aqui -->
                         </div>
                     </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            let addressData = {};
+                            try {
+                                addressData = JSON.parse(localStorage.getItem('data-drop2') || '{}');
+                            } catch (error) {
+                                addressData = {};
+                            }
+
+                            const name = localStorage.getItem('nome')
+                                || localStorage.getItem('nomeCompleto')
+                                || addressData.destinatario
+                                || '';
+                            const cpf = (localStorage.getItem('cpf')
+                                || localStorage.getItem('valorGuardado')
+                                || '').replace(/\D/g, '');
+
+                            const nameOverlay = document.getElementById('text-overlay-1');
+                            const cpfOverlay = document.getElementById('text-overlay-2');
+                            if (nameOverlay) nameOverlay.textContent = name;
+                            if (cpfOverlay) cpfOverlay.textContent = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                        });
+                    </script>
 
                 </div>
             </main>
